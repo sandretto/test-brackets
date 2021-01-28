@@ -1,17 +1,22 @@
-const openingBrackets = ['(', '[', '{'];
-const closingBrackets = [')', ']', '}'];
+const brackets = new Map();
+brackets
+    .set("(", ")")
+    .set("[", "]")
+    .set("{", "}");
+
+const closingBrackets = Array.from(brackets.values());
 
 function checkBracket(s: string) : boolean{
     const symbols = s.split('');
     const stack = [];
     for(let c of symbols) {
 
-        if(!openingBrackets.includes(c) &&
+        if(!brackets.has(c) &&
         !closingBrackets.includes(c)){
             continue;
         }
         
-	    if(openingBrackets.includes(c)) {
+	    if(brackets.has(c)) {
             stack.push(c);
             continue;
         }
@@ -21,10 +26,7 @@ function checkBracket(s: string) : boolean{
         
         let top = stack[stack.length - 1];
 
-        const i = openingBrackets.indexOf(c);
-
-        if (c == openingBrackets[i] && 
-            top != closingBrackets[i])
+        if(brackets.get(top) !== c)
             return false;
 
         stack.pop();
@@ -45,3 +47,7 @@ test("((a + b) + 123)");
 test("((1+b)");
 test(")a + b(");
 test("())a + b(");
+test("(a + b]");
+test("())(");
+test("{}()[]")
+test("{)")

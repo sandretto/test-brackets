@@ -1,24 +1,26 @@
-var openingBrackets = ['(', '[', '{'];
-var closingBrackets = [')', ']', '}'];
+var brackets = new Map();
+brackets
+    .set("(", ")")
+    .set("[", "]")
+    .set("{", "}");
+var closingBrackets = Array.from(brackets.values());
 function checkBracket(s) {
     var symbols = s.split('');
     var stack = [];
     for (var _i = 0, symbols_1 = symbols; _i < symbols_1.length; _i++) {
         var c = symbols_1[_i];
-        if (!openingBrackets.includes(c) &&
+        if (!brackets.has(c) &&
             !closingBrackets.includes(c)) {
             continue;
         }
-        if (openingBrackets.includes(c)) {
+        if (brackets.has(c)) {
             stack.push(c);
             continue;
         }
         if (stack.length === 0)
             return false;
         var top_1 = stack[stack.length - 1];
-        var i = openingBrackets.indexOf(c);
-        if (c == openingBrackets[i] &&
-            top_1 != closingBrackets[i])
+        if (brackets.get(top_1) !== c)
             return false;
         stack.pop();
     }
@@ -36,3 +38,7 @@ test("((a + b) + 123)");
 test("((1+b)");
 test(")a + b(");
 test("())a + b(");
+test("(a + b]");
+test("())(");
+test("{}()[]");
+test("{)");
